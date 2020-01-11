@@ -6,25 +6,29 @@ root = tree.getroot()
 
 for datasource in root.findall('datasources/datasource'):
     value = datasource.get('caption')
-    columnId=0
+    c_ID=0
     dict_calc={}
     all_calculation=[]
-
+    
     if value == "customer_order_profile (ML Estimated)":
         for column in datasource.findall("column"):
-            columnId=columnId+1
-            c_value=column.get("name")
+            c_ID=c_ID+1
+            c_name=column.get("name")
             c_caption=column.get("caption")
-            dict_calc.update({columnId: c_value})
+            c_role=column.get("role")
+            dict_calc.update({c_ID: c_name})
             dataset=[]
+            type_of_column="field"
+            id_calc_all=[]
 
-            for formula in column.findall("calculation"): 
-                c_formula=formula.get("formula")
-                amount=c_formula.count("[Calculation_")
+           
+            if column.find("calculation")  is not None:
+                c_formula=column.find("calculation").get("formula")
+                #print(column.find("calculation").get("formula"))
+                type_of_column="calculation"
                 idx_s =[i for i in range(len(c_formula)) if c_formula.startswith("[", i)]
                 idx_e =[i for i in range(len(c_formula)) if c_formula.startswith("]", i)]                
-                id_calc_all=[]
-                id_calc_pos=[]
+                
                 j=0
 
                 for pos_start_all in idx_s:
@@ -32,16 +36,18 @@ for datasource in root.findall('datasources/datasource'):
                     j=j+1
                     value_all=c_formula[pos_start_all:pos_end_all+1]
                     id_calc_all.append(value_all)
-                    concat=str(pos_start_all) + "-" + str(pos_end_all)
-                    id_calc_pos.append(concat)
-
-            dataset.append(columnId)
+            else:
+                c_formula=column.find("calculation")
+                #print(column.find("calculation"))
+            
+            dataset.append(c_ID)
             dataset.append(c_caption)
-            dataset.append(c_value)
-            dataset.append(amount)
+            dataset.append(c_name)
+            dataset.append(type_of_column)
             dataset.append(c_formula)
             dataset.append(id_calc_all)
-            
+            dataset.append(c_role)
+            #print(dataset)
             all_calculation.append(dataset)     
 
         final=[]
@@ -51,10 +57,11 @@ for datasource in root.findall('datasources/datasource'):
         head.append("id")
         head.append("caption")
         head.append("name")
-        head.append("amount_parent_calculations")
+        head.append("type_of_column_parent_calculations")
         head.append("formula")
         head.append("names_of_parent")
         head.append("ids_of_parent")
+        head.append("role_of_column")
         final.append(head)
         
 
@@ -66,6 +73,7 @@ for datasource in root.findall('datasources/datasource'):
             temp.append(calc[3])
             temp.append(calc[4])
             temp.append(calc[5])
+            
             ids=[]
 
             for element in calc[5]:
@@ -77,8 +85,9 @@ for datasource in root.findall('datasources/datasource'):
                 ids.append(dependencies)
 
             temp.append(ids)
+            temp.append(calc[6])
             final.append(temp)
-
+        
         with open("output/output.csv", 'w', newline='') as myfile:
             wr = csv.writer(myfile, delimiter=';')
             wr.writerows(final)              
