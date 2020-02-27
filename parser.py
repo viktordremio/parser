@@ -3,7 +3,7 @@ import csv
 from graph import drawGraph
 
 # Requiered Define with Tablaeu Workbook should be analyzed
-tablaeuWorkBook = ET.parse('src/2019_12-02 - Cost to Serve (Live) - DH - Local.twb')
+tablaeuWorkBook = ET.parse('src/2019_12-02 - Cost to Serve (Live) - DH.twb')
 # Requiered Choose the Tab or Datasource from Tablaeu Workbook
 tablaeuSource="customer_order_profile (ML Estimated)"
 
@@ -14,6 +14,7 @@ def parse():
     root = tablaeuWorkBook.getroot()
     for datasource in root.findall('datasources/datasource'):
         value = datasource.get('caption')
+        print (value)
         columnID=0
         columnCollections={}
         all_calculation=[]

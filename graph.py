@@ -59,14 +59,18 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
             formula=row[4]
             formula=formula.replace("<","&#60;")
             formula=formula.replace(">","&#62;")
-
+            formula=formula.replace("\n"," ")
             formulaTemp=[]
             formulaTemp=formula.split(" ")
             n = 5
             ret = ''
-            for i in range(0, 2, n):
-                ret += '<br/>'.join(formulaTemp[i:i+n]) 
-            formula=ret+"..."    
+            print(len(formulaTemp))
+            for i in range(0, len(formulaTemp), n):
+                
+                ret =ret+ str(formulaTemp[i:i+n]) +'<br/>'
+                print(ret)
+            formula=ret
+            #print(formula)   
         temp.append(formula)
         nodes.append(temp)
 
