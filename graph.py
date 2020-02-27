@@ -64,11 +64,11 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
             formulaTemp=formula.split(" ")
             n = 5
             ret = ''
-            print(len(formulaTemp))
+            #print(len(formulaTemp))
             for i in range(0, len(formulaTemp), n):
                 
                 ret =ret+ str(formulaTemp[i:i+n]) +'<br/>'
-                print(ret)
+                #print(ret)
             formula=ret
             #print(formula)   
         temp.append(formula)
