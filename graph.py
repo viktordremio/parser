@@ -55,23 +55,38 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
                 edges.append(temp_parent)
 
         formula="no calculation"
+        
         if row[4]!="":
+
             formula=row[4]
             formula=formula.replace("<","&#60;")
             formula=formula.replace(">","&#62;")
             formula=formula.replace("\n"," ")
+            formula=formula.replace("'"," ")
+            formula=formula.replace(","," ")
+            formula=formula.replace("'"," ")
+            formula=formula.replace(","," ")
             formulaTemp=[]
             formulaTemp=formula.split(" ")
-            n = 5
+            
+            n = 10
             ret = ''
             #print(len(formulaTemp))
             for i in range(0, len(formulaTemp), n):
                 
                 ret =ret+ str(formulaTemp[i:i+n]) +'<br/>'
+
                 #print(ret)
             formula=ret
-            #print(formula)   
-        temp.append(formula)
+            #print('\n')
+            formula=formula.replace("'","")
+            formula=formula.replace(",","")
+            formula=formula.replace("[","")
+            formula=formula.replace("]","")
+            print(formula)   
+        temp.append(str(formula))
+        #temp.insert(3, formula)
+        #print(temp[3])
         nodes.append(temp)
 
 
@@ -86,6 +101,7 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
     newNode=[]
 
     for node in nodes:
+        
         if node[0] in setOfEdges:
             newNode.append(node)
         else:
@@ -96,6 +112,12 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
 
 
     for node in newNode:
+       
+        formula=str(node[3]).replace("'"," ")
+        formula=formula.replace(","," ")
+        formula=formula.replace(" ","")
+        #print('\n')
+        #print(node[3])
         if node[2]=="calculation":
             col="blue"
         else:
@@ -109,7 +131,7 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
             <TR>
             <TD>%s</TD> 
             </TR>
-            </TABLE>>''' % (str(node[0]), str(node[1]), str(node[3])), 
+            </TABLE>>''' % (str(node[0]), str(node[1]), formula), 
             shape="box", color=col)
 
     for edge in edges:
