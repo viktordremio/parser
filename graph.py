@@ -4,6 +4,8 @@ from graphviz import Digraph
 
 #__package__ = ".package"
 def drawGraph(tablaeuSource, onlyConnectedFileds):
+    columnWidth=60
+
     graphType=onlyConnectedFileds #no unconnceted fields
     single=True #single parent
 
@@ -59,31 +61,22 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
         if row[4]!="":
 
             formula=row[4]
-            formula=formula.replace("<","&#60;")
-            formula=formula.replace(">","&#62;")
-            formula=formula.replace("\n"," ")
-            formula=formula.replace("'"," ")
-            formula=formula.replace(","," ")
-            formula=formula.replace("'"," ")
-            formula=formula.replace(","," ")
-            formulaTemp=[]
-            formulaTemp=formula.split(" ")
-            
-            n = 10
-            ret = ''
-            #print(len(formulaTemp))
-            for i in range(0, len(formulaTemp), n):
-                
-                ret =ret+ str(formulaTemp[i:i+n]) +'<br/>'
+            formula=formula.replace("<","#")
+            formula=formula.replace(">","§")
 
-                #print(ret)
-            formula=ret
-            #print('\n')
-            formula=formula.replace("'","")
-            formula=formula.replace(",","")
-            formula=formula.replace("[","")
-            formula=formula.replace("]","")
-            print(formula)   
+            #formula=formula.replace("<","&#60;")
+            #formula=formula.replace(">","&#62;")
+            formula=formula.replace("\n"," ")
+            formula=' '.join(formula.split())
+            n = columnWidth
+            formulaTemporal = ''
+            for i in range(0, len(formula), n):
+                formulaTemporal+= str(formula[i:i+n]) +'<br/>'
+            
+            formulaTemporal=formulaTemporal.replace("#","&#60;")
+            formulaTemporal=formulaTemporal.replace("§","&#62;")
+            formula=formulaTemporal 
+
         temp.append(str(formula))
         #temp.insert(3, formula)
         #print(temp[3])
@@ -92,7 +85,7 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
 
     dot = Digraph(comment='Parent-Child')
     col="black"
-
+    
     setOfEdges=set()
 
     for edge in edges:
@@ -112,12 +105,7 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
 
 
     for node in newNode:
-       
-        formula=str(node[3]).replace("'"," ")
-        formula=formula.replace(","," ")
-        formula=formula.replace(" ","")
-        #print('\n')
-        #print(node[3])
+
         if node[2]=="calculation":
             col="blue"
         else:
@@ -131,7 +119,7 @@ def drawGraph(tablaeuSource, onlyConnectedFileds):
             <TR>
             <TD>%s</TD> 
             </TR>
-            </TABLE>>''' % (str(node[0]), str(node[1]), formula), 
+            </TABLE>>''' % (str(node[0]), str(node[1]), node[3]), 
             shape="box", color=col)
 
     for edge in edges:
